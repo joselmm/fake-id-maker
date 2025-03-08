@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <!-- Viewport para dispositivos móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Superposición de Imágenes con Fabric.js</title>
+  <title>Fake Id Generator con Fabric.js</title>
   <!-- Incluimos Fabric.js -->
   <script src="./fabric.min.js"></script>
   <link rel="icon" type="image/x-icon" href="./favicon-32x32.png">
@@ -19,12 +20,14 @@
       flex-direction: column;
       align-items: center;
     }
+
     /* Contenedor para el canvas, responsivo */
     .canvas-container {
       width: 100%;
       max-width: 900px;
       margin: 20px auto;
     }
+
     /* Canvas: se adapta al ancho del contenedor */
     canvas {
       width: 100%;
@@ -32,6 +35,7 @@
       display: block;
       border: 1px solid #ccc;
     }
+
     /* Estilos para el formulario */
     form {
       width: 100%;
@@ -47,12 +51,14 @@
       justify-content: center;
       box-sizing: border-box;
     }
+
     form label {
       flex-basis: 100%;
       text-align: center;
       font-weight: bold;
       margin-bottom: 5px;
     }
+
     form input[type="text"],
     form input[type="file"] {
       flex: 1 1 200px;
@@ -61,6 +67,7 @@
       border-radius: 4px;
       box-sizing: border-box;
     }
+
     form button {
       flex: 1 1 200px;
       padding: 10px;
@@ -71,15 +78,28 @@
       cursor: pointer;
       box-sizing: border-box;
     }
+    button#descargar {
+    
+      background-color: #63d669;
+      
+    }
+
     form button:hover {
       background-color: #0056b3;
     }
+
+    .thecanvas  {
+      max-width: 100dvw;
+      width: 100%;
+      height: auto;
+    }
   </style>
 </head>
+
 <body>
   <div class="canvas-container">
     <!-- Canvas donde se trabajará -->
-    <canvas id="c" width="864" height="545"></canvas>
+    <canvas class="thecanvas" id="c" width="864" height="545"></canvas>
   </div>
   <form id="form">
     <label for="nombre">Nombre</label>
@@ -92,11 +112,25 @@
     // Crear el canvas con Fabric.js
     var canvas = new fabric.Canvas('c');
 
+    //hacer no editable
+    canvas.forEachObject(function (obj) {
+      obj.selectable = false;
+      obj.evented = false; // También deshabilita la respuesta a eventos (clics, arrastres, etc.)
+    });
+
+    if( document.querySelectorAll(".thecanvas")[0].width>document.body.clientWidth){
+      document.querySelectorAll(".thecanvas")[0].parentElement.style.height=document.body.clientWidth*0.63+"px"
+      document.querySelectorAll(".thecanvas")[0].parentElement.style.width=document.body.clientWidth+"px"
+      Array.from(document.querySelectorAll(".thecanvas")).forEach(element=>{
+        element.style.height=document.body.clientWidth*0.63+"px"
+      })
+    }
+
     // Cargar la imagen de fondo
-    fabric.Image.fromURL('./template.png', function(img) {
+    fabric.Image.fromURL('./template.png', function (img) {
       // Ajustar la imagen para que cubra todo el canvas
       img.scaleToWidth(canvas.width);
-      img.scaleToHeight(canvas.height);
+     // img.scaleToHeight(canvas.height);
       // Establecer la imagen como fondo
       canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
     }, { crossOrigin: 'anonymous' });
@@ -106,10 +140,10 @@
       top: 151,
       fontFamily: 'Arial',
       fontSize: 30,
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
       fill: 'black'
     });
-    
+
     document.querySelector("#nombre").value = localStorage.getItem("nombreAmazon") || '';
     // Agregar el texto al canvas
     canvas.add(nombre);
@@ -121,10 +155,10 @@
       top: 205,
       fontFamily: 'Arial',
       fontSize: 33,
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
       fill: 'black'
     });
-    
+
     // Agregar el texto al canvas
     canvas.add(dob);
 
@@ -133,10 +167,10 @@
       top: 263,
       fontFamily: 'Arial',
       fontSize: 32,
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
       fill: 'black'
     });
-    
+
     // Agregar el texto al canvas
     canvas.add(address);
 
@@ -145,10 +179,10 @@
       top: 318,
       fontFamily: 'Arial',
       fontSize: 32,
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
       fill: 'black'
     });
-    
+
     // Agregar el texto al canvas
     canvas.add(phoneNumber);
 
@@ -157,10 +191,10 @@
       top: 419,
       fontFamily: 'Arial',
       fontSize: 32,
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
       fill: 'black'
     });
-    
+
     // Agregar el texto al canvas
     canvas.add(country);
 
@@ -171,10 +205,10 @@
       top: 465,
       fontFamily: 'Arial',
       fontSize: 32,
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
       fill: 'black'
     });
-    
+
     // Agregar el texto al canvas
     canvas.add(issue);
 
@@ -185,10 +219,10 @@
       top: 467,
       fontFamily: 'Arial',
       fontSize: 32,
-      fontWeight: 'bold', 
+      fontWeight: 'bold',
       fill: 'black'
     });
-    
+
     // Agregar el texto al canvas
     canvas.add(issue);
 
@@ -243,15 +277,15 @@
     });
 
     // Escuchar el cambio en el input para cargar imagen de marca de agua
-    document.getElementById('fileInput').addEventListener('change', function(e) {
+    document.getElementById('fileInput').addEventListener('change', function (e) {
       var file = e.target.files[0];
       if (!file) return; // Si no se selecciona archivo, salimos
 
       // Crear un FileReader para leer el archivo
       var reader = new FileReader();
-      reader.onload = function(event) {
+      reader.onload = function (event) {
         // event.target.result contiene la Data URL de la imagen
-        fabric.Image.fromURL(event.target.result, function(watermark) {
+        fabric.Image.fromURL(event.target.result, function (watermark) {
           watermark.scaleToWidth(198);
           watermark.set({
             left: 35,
@@ -266,6 +300,9 @@
       // Leer el archivo como Data URL (base64)
       reader.readAsDataURL(file);
     });
+
+    document.querySelector("#descargar").scrollIntoView()
   </script>
 </body>
+
 </html>
