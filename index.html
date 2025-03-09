@@ -78,17 +78,18 @@
       cursor: pointer;
       box-sizing: border-box;
     }
+
     button#descargar {
-    
+
       background-color: #63d669;
-      
+
     }
 
     form button:hover {
       background-color: #0056b3;
     }
 
-    .thecanvas  {
+    .thecanvas {
       max-width: 100dvw;
       width: 100%;
       height: auto;
@@ -103,7 +104,7 @@
   </div>
   <form id="form">
     <label for="nombre">Nombre</label>
-    <input type="file" id="fileInput" accept="image/*">
+   <!--  <input type="file" id="fileInput" accept="image/*"> -->
     <input id="nombre" type="text">
     <button type="button" onclick="location.reload()">Recargar</button>
     <button id="descargar" type="button">Descargar</button>
@@ -118,11 +119,11 @@
       obj.evented = false; // También deshabilita la respuesta a eventos (clics, arrastres, etc.)
     });
 
-    if( document.querySelectorAll(".thecanvas")[0].width>document.body.clientWidth){
-      document.querySelectorAll(".thecanvas")[0].parentElement.style.height=document.body.clientWidth*0.63+"px"
-      document.querySelectorAll(".thecanvas")[0].parentElement.style.width=document.body.clientWidth+"px"
-      Array.from(document.querySelectorAll(".thecanvas")).forEach(element=>{
-        element.style.height=document.body.clientWidth*0.63+"px"
+    if (document.querySelectorAll(".thecanvas")[0].width > document.body.clientWidth) {
+      document.querySelectorAll(".thecanvas")[0].parentElement.style.height = document.body.clientWidth * 0.63 + "px"
+      document.querySelectorAll(".thecanvas")[0].parentElement.style.width = document.body.clientWidth + "px"
+      Array.from(document.querySelectorAll(".thecanvas")).forEach(element => {
+        element.style.height = document.body.clientWidth * 0.63 + "px"
       })
     }
 
@@ -130,7 +131,7 @@
     fabric.Image.fromURL('./template.png', function (img) {
       // Ajustar la imagen para que cubra todo el canvas
       img.scaleToWidth(canvas.width);
-     // img.scaleToHeight(canvas.height);
+      // img.scaleToHeight(canvas.height);
       // Establecer la imagen como fondo
       canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
     }, { crossOrigin: 'anonymous' });
@@ -201,9 +202,9 @@
     canvas.add(country);
 
     var issueDate = addYears(birthDate, 18);
-    
 
-    var issue = new fabric.Text(issueDate.toLocaleDateString("en-US",options), {
+
+    var issue = new fabric.Text(issueDate.toLocaleDateString("en-US", options), {
       left: 170,
       top: 465,
       fontFamily: 'Arial',
@@ -217,7 +218,7 @@
 
     var issueDate = addYears(birthDate, 28);
 
-    var issue = new fabric.Text(issueDate.toLocaleDateString("en-US",options), {
+    var issue = new fabric.Text(issueDate.toLocaleDateString("en-US", options), {
       left: 474,
       top: 467,
       fontFamily: 'Arial',
@@ -280,7 +281,7 @@
     });
 
     // Escuchar el cambio en el input para cargar imagen de marca de agua
-    document.getElementById('fileInput').addEventListener('change', function (e) {
+    /* document.getElementById('fileInput').addEventListener('change', function (e) {
       var file = e.target.files[0];
       if (!file) return; // Si no se selecciona archivo, salimos
 
@@ -302,9 +303,36 @@
       };
       // Leer el archivo como Data URL (base64)
       reader.readAsDataURL(file);
-    });
+    }); */
 
     document.querySelector("#descargar").scrollIntoView()
+
+
+
+    async function getFace() {
+      var response = await fetch("https://script.google.com/macros/s/AKfycbxKYRJHmDWHLNjrZb73IGzSjyu-dIu5Hl267cQSOsPlM3gBptBiIb4DRxM5cLZqOASB/exec");
+      var data = await response.json()
+      if(data.noError){
+
+        var dataUrl = data.imageBase64; // Ej: "data:image/jpeg;base64,....."
+        fabric.Image.fromURL(dataUrl, function (img) {
+          img.scaleToWidth(201);
+          img.set({
+            left: 34,
+            top: 138,
+            opacity: 1,
+            scaleY:0.231
+          });
+          canvas.add(img);
+          canvas.renderAll();
+        });
+      }else{
+        alert(data.message)
+      }
+
+
+    }
+    getFace()
   </script>
 </body>
 
