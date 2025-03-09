@@ -137,9 +137,9 @@
 
     var nombre = new fabric.Text(localStorage.getItem("nombreAmazon") || 'NOMBRE DE JULANO', {
       left: 378,
-      top: 151,
+      top: 150,
       fontFamily: 'Arial',
-      fontSize: 30,
+      fontSize: 32,
       fontWeight: 'bold',
       fill: 'black'
     });
@@ -149,8 +149,10 @@
     canvas.add(nombre);
 
     var birthDate = getRandomBirthDate();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
 
-    var dob = new fabric.Text(birthDate.toLocaleDateString(), {
+
+    var dob = new fabric.Text(birthDate.toLocaleDateString("en-US", options), {
       left: 359,
       top: 205,
       fontFamily: 'Arial',
@@ -199,8 +201,9 @@
     canvas.add(country);
 
     var issueDate = addYears(birthDate, 18);
+    
 
-    var issue = new fabric.Text(issueDate.toLocaleDateString(), {
+    var issue = new fabric.Text(issueDate.toLocaleDateString("en-US",options), {
       left: 170,
       top: 465,
       fontFamily: 'Arial',
@@ -214,7 +217,7 @@
 
     var issueDate = addYears(birthDate, 28);
 
-    var issue = new fabric.Text(issueDate.toLocaleDateString(), {
+    var issue = new fabric.Text(issueDate.toLocaleDateString("en-US",options), {
       left: 474,
       top: 467,
       fontFamily: 'Arial',
