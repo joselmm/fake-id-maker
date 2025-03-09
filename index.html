@@ -276,7 +276,7 @@
         format: 'png',
         quality: 1.0
       });
-      link.download = 'canvas.png';
+      link.download = 'DOCUMENT-'+generarNumeroCuatroDigitos()+'.png';
       link.click();
     });
 
@@ -333,6 +333,16 @@
 
     }
     getFace()
+
+    function generarNumeroCuatroDigitos() {
+    // Genera un número aleatorio entre 1000 y 9999
+    let numero = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+    
+    // Convierte el número a string
+    return numero.toString();
+}
+
+
   </script>
 </body>
 
