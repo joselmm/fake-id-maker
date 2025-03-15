@@ -128,7 +128,11 @@
     <button id="descargar" type="button">Descargar</button>
   </form>
   <script>
-    var API_URL="https://script.google.com/macros/s/AKfycbxKYRJHmDWHLNjrZb73IGzSjyu-dIu5Hl267cQSOsPlM3gBptBiIb4DRxM5cLZqOASB/exec";
+    
+    var GAS_URL="https://script.google.com/macros/s/AKfycbxKYRJHmDWHLNjrZb73IGzSjyu-dIu5Hl267cQSOsPlM3gBptBiIb4DRxM5cLZqOASB/exec";
+    
+   // var RENDER_URL = "http://localhost:3000/"
+    var RENDER_URL = "https://tpde-proxy.onrender.com"
     // Crear el canvas con Fabric.js
     var canvas = new fabric.Canvas('c');
 
@@ -332,18 +336,19 @@
 
 
     async function getFace() {
-      var response = await fetch(API_URL);
+      var response = await fetch(RENDER_URL);
       var data = await response.json()
       if (data.noError) {
 
         var dataUrl = data.imageBase64; // Ej: "data:image/jpeg;base64,....."
         fabric.Image.fromURL(dataUrl, function (img) {
+          /* console.log() */
           img.scaleToWidth(201);
           img.set({
             left: 34,
             top: 138,
             opacity: 1,
-            scaleY: 0.231
+            scaleY: 236.544/img.height
           });
           canvas.add(img);
           canvas.renderAll();
@@ -366,7 +371,7 @@
  
 
     document.querySelector("#btn-nuevonombre").addEventListener("click",async ()=>{
-      var rs= await fetch(API_URL, {method:"POST"});
+      var rs= await fetch(GAS_URL, {method:"POST"});
       var json= await rs.json();
       
       document.querySelector("#nombre").value=json.name
