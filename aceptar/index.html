@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmar Link</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+    input {
+      font-size: 1.5em;
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      margin-bottom: 20px;
+    }
+    button {
+      font-size: 2em;
+      padding: 20px 40px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="username" placeholder="Ingrese su usuario">
+  <button id="confirmBtn">Confirmar</button>
+  
+  <!-- Contenedor donde se mostrará el botón para abrir el enlace -->
+  <div id="linkContainer"></div>
+  
+  <script>
+    document.getElementById("confirmBtn").addEventListener("click", function() {
+      var user = document.getElementById("username").value.trim();
+      if (!user) {
+        alert("Por favor, ingrese su usuario.");
+        return;
+      }
+      
+      // Limpiar el contenedor del botón en cada petición
+      document.getElementById("linkContainer").innerHTML = "";
+      
+      // Creamos el objeto JSON con el usuario ingresado
+      var dataObj = { user: user };
+      
+      // Realizamos la petición POST con el cuerpo JSON
+      fetch("https://script.google.com/macros/s/AKfycbw7KAM7b0K_353QlFko7WqTE9PM6oQY2R4uLBzdmxojtTYfdNOX_IHrq2zsIT32iV0Z/exec", {
+        method: "POST",
+        
+        body: JSON.stringify(dataObj)
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(json) {
+        if (json.noError && json.matchLink) {
+          // Crear botón que permitirá abrir el enlace manualmente
+          var linkBtn = document.createElement("button");
+          linkBtn.textContent = "Abrir enlace";
+          linkBtn.addEventListener("click", function() {
+            window.open(json.matchLink, "_blank");
+          });
+          document.getElementById("linkContainer").appendChild(linkBtn);
+        } else {
+          alert("Error: " + (json.message || "Respuesta no esperada"));
+        }
+      })
+      .catch(function(error) {
+        alert("Error en la petición: " + error.message);
+      });
+    });
+  </script>
+</body>
+</html>
