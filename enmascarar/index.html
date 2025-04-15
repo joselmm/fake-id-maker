@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Enmascarar Tarjeta</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label, input, button {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 300px;
+      padding: 5px;
+    }
+    #result {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Enmascarar Tarjeta</h1>
+  
+  <!-- Campo para ingresar la tarjeta en el formato especificado -->
+  <label for="cardInput">Tarjeta (Formato: NumeroTarjeta|Mes|Año|CVV):</label>
+  <input type="text" id="cardInput" placeholder="4347698046834540|09|2027|046">
+  
+  <!-- Campo numérico para indicar el número de dígitos a enmascarar (default: 5) -->
+  <label for="maskCount">Número de dígitos a enmascarar (por defecto 5):</label>
+  <input type="number" id="maskCount" value="5" min="0">
+  
+  <!-- Botón para ejecutar la función de enmascarado -->
+  <button onclick="maskCard()">Enmascarar Tarjeta</button>
+  
+  <h2>Tarjeta Enmascarada:</h2>
+  <p id="result"></p>
+
+  <!-- Botón para copiar el resultado -->
+  <button onclick="copyResult()">Copiar Resultado</button>
+  
+  <script>
+    function maskCard() {
+      // Obtener el valor del campo de la tarjeta y el número de dígitos a enmascarar
+      const cardStr = document.getElementById("cardInput").value.trim();
+      let maskCount = parseInt(document.getElementById("maskCount").value, 10);
+      
+      // Validar que se haya ingresado algo en el campo de la tarjeta
+      if (cardStr === "") {
+        document.getElementById("result").textContent = "Por favor, ingresa un valor para la tarjeta.";
+        return;
+      }
+      
+      // Separar la cadena en partes usando el carácter "|"
+      const parts = cardStr.split("|");
+      if (parts.length !== 4) {
+        document.getElementById("result").textContent = "Formato incorrecto. Utiliza: NumeroTarjeta|Mes|Año|CVV";
+        return;
+      }
+  
+      let [cardNumber, month, year, cvv] = parts;
+  
+      // Verificar que la cantidad de dígitos a enmascarar no exceda la longitud de la parte numérica de la tarjeta
+      if (maskCount > cardNumber.length) {
+        maskCount = cardNumber.length;
+      }
+      
+      const keepCount = cardNumber.length - maskCount;
+      // Crear la parte enmascarada utilizando "x" repetido la cantidad indicada
+      const maskedSection = "x".repeat(maskCount);
+      const maskedNumber = cardNumber.slice(0, keepCount) + maskedSection;
+  
+      // Reemplazar el CVV por "rnd"
+      cvv = "rnd";
+  
+      // Armar la tarjeta final con el formato original
+      const resultCard = `${maskedNumber}|${month}|${year}|${cvv}`;
+      
+      // Mostrar el resultado
+      document.getElementById("result").textContent = resultCard;
+    }
+    
+    function copyResult() {
+      const resultText = document.getElementById("result").textContent;
+      if (!resultText) {
+        alert("No hay resultado para copiar.");
+        return;
+      }
+      navigator.clipboard.writeText(resultText)
+        .then(() => {
+          alert("Resultado copiado al portapapeles.");
+        })
+        .catch(err => {
+          alert("Error al copiar el resultado: " + err);
+        });
+    }
+  </script>
+</body>
+</html>
